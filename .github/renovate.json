@@ -35,12 +35,6 @@
                 "gomod"
             ],
             "groupName": "go deps"
-        },
-        {
-            "matchManagers": [
-                "github-actions"
-            ],
-            "groupName": "github actions"
         }
     ]
 }

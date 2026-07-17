@@ -1,6 +1,5 @@
 # datamatic
 
-[![Tests](https://github.com/mirpo/datamatic/actions/workflows/tests.yml/badge.svg)](https://github.com/mirpo/datamatic/actions/workflows/tests.yml)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/mirpo/datamatic)](https://golang.org/)
 [![Release](https://img.shields.io/github/v/release/mirpo/datamatic)](https://github.com/mirpo/datamatic/releases)
 [![License](https://img.shields.io/github/license/mirpo/datamatic)](https://github.com/mirpo/datamatic/blob/main/LICENSE)
